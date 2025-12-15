@@ -3,21 +3,31 @@
   "platforms": {
     "css": {
       "transformGroup": "css",
-      "buildPath": "build/css/",
+      "prefix": "lui",
+      "buildPath": "build/",
+      "transforms": ["attribute/cti", "name/kebab", "color/hsl"],
       "files": [
         {
           "destination": "_variables.css",
-          "format": "css/variables"
+          "format": "css/variables",
+          "options": {
+            "outputReferences": true
+          }
         }
       ]
     },
     "scss": {
       "transformGroup": "scss",
-      "buildPath": "build/scss/",
+      "prefix": "lui",
+      "buildPath": "build/",
+      "transforms": ["attribute/cti", "name/kebab", "color/hsl"],
       "files": [
         {
           "destination": "_variables.scss",
-          "format": "scss/variables"
+          "format": "scss/variables",
+          "options": {
+            "outputReferences": true
+          }
         }
       ]
     }
