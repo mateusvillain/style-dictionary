@@ -4,9 +4,6 @@ package-lock.json
 yarn.lock
 pnpm-lock.yaml
 
-# Build outputs
-build/
-
 # Logs
 logs
 *.log
