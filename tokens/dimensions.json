@@ -8,10 +8,7 @@
       }
     },
     "1": {
-      "$value": {
-        "value": "1",
-        "unit": "px"
-      }
+      "$value": "{spacing.0}"
     },
     "2": {
       "$value": {

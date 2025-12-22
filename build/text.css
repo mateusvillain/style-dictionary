@@ -1,0 +1,17 @@
+/**
+ * Do not edit directly, this file was auto-generated.
+ */
+
+:root {
+  --text-fonts-serif: 'Times New Roman', serif;
+  --text-fonts-sans: 'Open Sans', sans-serif;
+  --text-weights-light: thin;
+  --text-weights-regular: regular;
+  --text-weights-bold: extra-bold;
+  --text-line-heights-normal: 1.2;
+  --text-line-heights-large: 1.8;
+  --text-sizes-heading: var(--spacing-7);
+  --text-sizes-body: var(--spacing-4);
+  --text-typography-heading: var(--text-weights-bold) var(--text-sizes-heading)/var(--text-line-heights-large) var(--text-fonts-sans);
+  --text-typography-body: var(--text-weights-regular) var(--text-sizes-body)/var(--text-line-heights-normal) var(--text-fonts-serif);
+}

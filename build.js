@@ -134,9 +134,18 @@ StyleDictionary.hooks.formats['css/variables-combined'] = function({ dictionary,
   const darkMap = loadFilesToMap(darkFiles);
 
   const buildVariableLine = (name, item) => {
-    const baseVariableName = String(item.value).replace(/^\{|\}$/g, '').replace(/\./g, '-').replace(/_/g, '-');
-    const cssVariableName = `${baseVariableName}`;
-    return `  --${name}: ${cssVariableName};${item.comment ? ` /* ${item.comment} */` : ''}`;
+    const raw = String(item.value);
+    const comment = item.comment ? ` /* ${item.comment} */` : '';
+
+    // If the value is an alias in the form {path.to.token}, emit a CSS var reference
+    const refMatch = raw.match(/^\{(.+)\}$/);
+    if (refMatch) {
+      const refPath = refMatch[1].trim().replace(/\./g, '-').replace(/_/g, '-');
+      return `  --${name}: var(--${refPath});${comment}`;
+    }
+
+    // Otherwise emit the literal value (e.g. #FFFFFF, 8px)
+    return `  --${name}: ${raw};${comment}`;
   };
 
   const semanticVariables = Object.keys(lightMap).map(name => buildVariableLine(name, lightMap[name])).join('\n');
