@@ -1,0 +1,8 @@
+@use "sass:map";
+@use "../build/variables.scss" as light;
+@use "../build/variables.scss" as dark;
+
+$themes: (
+  light: light.$colors-light,
+  dark: dark.$colors-dark
+);

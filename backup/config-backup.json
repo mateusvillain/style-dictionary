@@ -1,0 +1,36 @@
+{
+  "source": ["tokens/**/*.json"],
+  "platforms": {
+    "css": {
+      "transformGroup": "css",
+      "prefix": "lui",
+      "transforms": ["attribute/cti", "name/kebab"],
+      "buildPath": "build/",
+      "files": [
+        {
+          "destination": "variables.css",
+          "format": "css/variables",
+          "options": {
+            "outputReferences": true
+          }
+        }
+      ]
+    },
+    "scss": {
+      "transformGroup": "scss",
+      "prefix": "lui",
+      "transforms": ["attribute/cti", "name/kebab"],
+      "buildPath": "build/",
+      "files": [
+        {
+          "destination": "variables.scss",
+          "format": "scss/map-flat",
+          "options": {
+            "mapName": "tokens",
+            "outputReferences": true
+          }
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,6 @@
+// tools/_theme-mixin.scss
+@mixin theme-vars($theme) {
+  @each $name, $value in $theme {
+    --color-#{$name}: #{$value};
+  }
+}

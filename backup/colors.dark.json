@@ -1,0 +1,13 @@
+{
+  "color": {
+    "$type": "color",
+    "base": {
+      "white": {
+        "$value": "#AAAAAA"
+      },
+      "black": {
+        "$value": "#BBBBBB"
+      }
+    }
+  }
+}
