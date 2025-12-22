@@ -2,28 +2,32 @@ import { globSync } from 'glob';
 import fs from 'fs';
 import path from 'path';
 import StyleDictionary from 'style-dictionary';
-// ...existing code...
-const tokenFiles = globSync('tokens/**/*.tokens');
+
+const tokenFiles = globSync('tokens/**/*.json');
 const HEADER_COMMENT = `/**
 * Do not edit directly, this file was auto-generated.
  */\n\n`;
 const myStyleDictionary = new StyleDictionary({
   source: tokenFiles,
   platforms: {
-    css_base: {
+    dimension: {
       transformGroup: 'css',
-      buildPath: 'build/base/',
+      buildPath: 'build/',
       files: [
         {
-          destination: 'colors.css',
+          destination: 'dimension.css',
           format: 'css/variables',
-          filter: (token) => token.filePath.includes('base'),
+          source: 'tokens/dimensions.json',
+          filter: token => token.filePath && token.filePath.includes('dimensions'),
+          options: {
+            outputReferences: true,
+          },
         },
       ],
     },
     css_semantic: {
       transformGroup: 'css',
-      buildPath: 'build/semantic/',
+      buildPath: 'build/',
       files: [
         {
           destination: 'colors.css',
@@ -36,12 +40,12 @@ const myStyleDictionary = new StyleDictionary({
     },
   },
 });
-// ...existing code...
+
 StyleDictionary.hooks.formats['css/variables-combined'] = function({ dictionary, options }) {
   const { outputReferences } = options;
 
   // Read semantic token source files directly so we keep both light and dark variants
-  const semanticFiles = globSync('tokens/semantic/**/*.tokens');
+  const semanticFiles = globSync('tokens/mode/**/*.json');
 
   const lightFiles = semanticFiles.filter(p => !p.includes('dark'));
   const darkFiles = semanticFiles.filter(p => p.includes('dark'));
@@ -81,7 +85,7 @@ StyleDictionary.hooks.formats['css/variables-combined'] = function({ dictionary,
 
   const buildVariableLine = (name, item) => {
     const baseVariableName = String(item.value).replace(/^\{|\}$/g, '').replace(/\./g, '-').replace(/_/g, '-');
-    const cssVariableName = `var(--${baseVariableName})`;
+    const cssVariableName = `${baseVariableName}`;
     return `  --${name}: ${cssVariableName};${item.comment ? ` /* ${item.comment} */` : ''}`;
   };
 
@@ -90,6 +94,6 @@ StyleDictionary.hooks.formats['css/variables-combined'] = function({ dictionary,
 
   return `${HEADER_COMMENT}:root {\n${semanticVariables}\n}\n\n@media (prefers-color-scheme: dark) {\n  :root {\n${darkVariables}\n  }\n}`;
 };
-// ...existing code...
+
 myStyleDictionary.buildAllPlatforms();
 console.log('Build completed!');
