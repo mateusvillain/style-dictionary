@@ -3,6 +3,38 @@ import fs from 'fs';
 import path from 'path';
 import StyleDictionary from 'style-dictionary';
 
+// Register a transform to handle DTCG-style dimension tokens where
+// token.original.$value is an object like { value: '8', unit: 'px' }
+StyleDictionary.registerTransform({
+  name: 'dtcg/format-dimension',
+  type: 'value',
+  matcher: token => token.type === 'dimension' && token.original && token.original.$value && typeof token.original.$value === 'object',
+  transform: token => {
+    const v = token.original.$value;
+    const valuePart = (v && (v.value !== undefined)) ? String(v.value) : '';
+    const unitPart = (v && v.unit) ? String(v.unit) : '';
+    return `${valuePart}${unitPart}`;
+  }
+});
+
+// Name transform: build a kebab-case name from token.path, e.g. ['spacing','0'] -> 'spacing-0'
+StyleDictionary.registerTransform({
+  name: 'dtcg/name/kebab',
+  type: 'name',
+  transform: token => {
+    if (!token.path || !Array.isArray(token.path)) return token.name || '';
+    return token.path.join('-').replace(/\./g, '-').replace(/_/g, '-');
+  }
+});
+
+// Create a transform group that ensures the DTCG dimension transform runs
+// before other transforms. Keep it minimal (only our transform) to avoid
+// depending on internal API shape of the library.
+StyleDictionary.registerTransformGroup({
+  name: 'dtcg/css',
+  transforms: ['dtcg/format-dimension', 'dtcg/name/kebab']
+});
+
 const tokenFiles = globSync('tokens/**/*.json');
 const HEADER_COMMENT = `/**
 * Do not edit directly, this file was auto-generated.
@@ -10,8 +42,26 @@ const HEADER_COMMENT = `/**
 const myStyleDictionary = new StyleDictionary({
   source: tokenFiles,
   platforms: {
-    dimension: {
+    text: {
       transformGroup: 'css',
+      buildPath: 'build/',
+      files: [
+        {
+          destination: 'text.css',
+          format: 'css/variables',
+          source: 'tokens/text.json',
+          filter: token => token.filePath && token.filePath.includes('text'),
+          options: {
+            outputReferences: true,
+          },
+        },
+      ],
+    },
+    dimension: {
+      // Use the custom transform group which at minimum applies our DTCG
+      // formatter. Keeping the group minimal avoids relying on internal
+      // transform lists from the library.
+      transformGroup: 'dtcg/css',
       buildPath: 'build/',
       files: [
         {

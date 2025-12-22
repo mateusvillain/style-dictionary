@@ -10,12 +10,12 @@
       }
     },
     "sizes": {
-      "$type": "fontSize",
+      "$type": "dimension",
       "heading": {
-        "$value": "{dimensions.7}"
+        "$value": "{spacing.7}"
       },
       "body": {
-        "$value": "{dimensions.4}"
+        "$value": "{spacing.4}"
       }
     },
     "weights": {
